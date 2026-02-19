@@ -159,7 +159,7 @@ const QuizFunnel = () => {
           </AnimatePresence>
         </div>
 
-        {!isThankYouStep && !isLoadingStep && (
+        {!isThankYouStep && !isLoadingStep && !isPhoneVerificationStep && (
           <ProgressBar
             currentStep={currentStep}
             totalSteps={totalSteps - 1}
