@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, ShieldCheck, Zap, Gift } from 'lucide-react';
 import ProgressBar from '@/components/ProgressBar';
 import StepAge from '@/components/steps/StepAge';
 import StepThree from '@/components/steps/StepThree';
@@ -113,16 +114,40 @@ const QuizFunnel = () => {
                 exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, right: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                <SocialProof className="mb-4" geoState={geoState} />
-                <div className="text-center mb-6 md:mb-8">
-                  <div className="flex items-center justify-center gap-2 mb-3">
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-                      {geoState
-                        ? `${geoState} Residents: See If You Qualify For New 2026 Term Life Rates`
-                        : 'See If You Qualify For New 2026 Term Life Rates'}
-                    </h1>
-                  </div>
-                  <p className="text-base md:text-lg text-gray-600">Answer 4 Quick Questions — No Medical Exam Required</p>
+                {/* Brand + State pill row */}
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-bold text-gray-800 tracking-tight">Quick Life Rates</span>
+                  {geoState && (
+                    <motion.span
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full"
+                    >
+                      <MapPin className="w-3 h-3" />
+                      {geoState}
+                    </motion.span>
+                  )}
+                </div>
+
+                {/* Headline */}
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-4">
+                  See If You Qualify For New 2026 Term Life Rates
+                </h1>
+
+                {/* Trust pills */}
+                <div className="flex items-center justify-center gap-2 md:gap-3 mb-5">
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1.5 rounded-full">
+                    <ShieldCheck className="w-3.5 h-3.5 text-green-600" />
+                    No Exam
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1.5 rounded-full">
+                    <Zap className="w-3.5 h-3.5 text-yellow-500" />
+                    60 Seconds
+                  </span>
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1.5 rounded-full">
+                    <Gift className="w-3.5 h-3.5 text-blue-500" />
+                    Free Quote
+                  </span>
                 </div>
               </motion.div>
             )}
@@ -134,6 +159,7 @@ const QuizFunnel = () => {
             currentStep={currentStep}
             totalSteps={totalSteps - 1}
             isLastStep={isPhoneVerificationStep}
+            hideLabels={showHeader}
           />
         )}
 
@@ -149,7 +175,13 @@ const QuizFunnel = () => {
           </motion.div>
         </AnimatePresence>
 
-        {!isPhoneVerificationStep && !isThankYouStep && !isLoadingStep && (
+        {/* Social proof below the card on step 0 only */}
+        {showHeader && (
+          <SocialProof className="mt-6" geoState={geoState} />
+        )}
+
+        {/* Badges on quiz steps 1-3 only (not step 0, not phone/loading/thankyou) */}
+        {!showHeader && !isPhoneVerificationStep && !isThankYouStep && !isLoadingStep && (
           <Badges className="mt-8" />
         )}
       </div>
