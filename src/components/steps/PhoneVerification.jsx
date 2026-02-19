@@ -10,37 +10,40 @@ import FinalReview from './phone-verification/FinalReview';
 const RESEND_COOLDOWN_SECONDS = 30;
 const MAX_RESENDS = 3;
 
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  return match ? match[2] : null;
+}
+
 const sendLeadWebhook = async (leadData, eventId) => {
   const webhookSent = sessionStorage.getItem('webhookSent');
   if (webhookSent === 'true') {
-    console.log("Webhook already sent for this session. Skipping.");
     return { success: true, message: "Webhook already sent." };
   }
 
   try {
-    const { data: webhookData, error: webhookError } = await supabase.functions.invoke('send-lead-webhook', {
-      body: leadData,
+    const webhookResponse = await fetch('/api/send-lead-webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(leadData),
     });
+    const webhookData = await webhookResponse.json();
 
-    if (webhookError) {
-      throw new Error(`Webhook invocation failed: ${webhookError.message}`);
+    if (!webhookResponse.ok) {
+      throw new Error(webhookData.error || 'Webhook failed');
     }
-    
+
     // Also send to Facebook CAPI
-    const { error: fbError } = await supabase.functions.invoke('send-facebook-lead', {
-        body: { 
-          leadData,
-          event_id: eventId,
-        },
-    });
-    
-    if (fbError) {
-        // Log FB error but don't fail the whole process
-        console.error("Facebook CAPI invocation failed:", fbError.message);
-    }
+    const fbc = getCookie('_fbc');
+    const fbp = getCookie('_fbp');
+
+    fetch('/api/send-facebook-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ leadData, event_id: eventId, fbc, fbp }),
+    }).catch(err => console.error("Facebook CAPI failed:", err));
 
     sessionStorage.setItem('webhookSent', 'true');
-    console.log("Webhook and CAPI sent successfully.", webhookData);
     return { success: true, data: webhookData };
   } catch (error) {
     console.error("Error sending lead to webhook/CAPI:", error);
@@ -50,7 +53,7 @@ const sendLeadWebhook = async (leadData, eventId) => {
 
 
 const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => {
-  const [currentView, setCurrentView] = useState('details'); // 'details', 'otp', 'review'
+  const [currentView, setCurrentView] = useState('details');
   const [isLoading, setIsLoading] = useState(false);
   const [otp, setOtp] = useState(['', '', '', '']);
   const [name, setName] = useState(formData.name || '');
@@ -84,48 +87,52 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
   const getLeadData = (isVerified) => {
     const certUrlInput = document.querySelector('input[name="xxTrustedFormCertUrl"]');
-    const certificate_url = certUrlInput ? certUrlInput.value : null;
+    const cert_url = certUrlInput ? certUrlInput.value : null;
     const numericPhone = `+1${phone.replace(/\D/g, '')}`;
 
     return {
       name,
       phone: numericPhone,
+      age_range: formData.age_range,
+      smoker: formData.smoker,
+      health: formData.health,
+      coverage: formData.coverage_amount,
       zip_code: formData.zipCode,
       state: formData.state,
-      protect_whom: formData.protect,
-      is_smoker: formData.smoker,
-      health_status: formData.health,
-      coverage_amount: formData.coverage_amount, // Changed from monthly_budget
+      estimated_rate: formData.estimated_rate || null,
       verified: isVerified,
-      certificate_url,
+      cert_url,
     };
   };
 
   const scheduleUnverifiedLeadSubmission = () => {
-    clearTimeout(unverifiedLeadTimer.current); // Clear any existing timer
+    clearTimeout(unverifiedLeadTimer.current);
     unverifiedLeadTimer.current = setTimeout(async () => {
-      console.log('5-minute timer elapsed. Submitting unverified lead...');
       const unverifiedLeadData = getLeadData(false);
-      
-      const { error: dbError } = await supabase.from('leads').insert([unverifiedLeadData]);
+
+      const { error: dbError } = await supabase.from('term_leads').insert([unverifiedLeadData]);
       if (dbError) {
         console.error('Error saving unverified lead to DB:', dbError);
       } else {
         await sendLeadWebhook(unverifiedLeadData);
       }
-    }, 300000); // 5 minutes = 300,000 milliseconds
+    }, 300000);
   };
 
   const sendOtp = useCallback(async () => {
     setIsLoading(true);
     const numericPhone = `+1${phone.replace(/\D/g, '')}`;
     try {
-      const { data, error } = await supabase.functions.invoke('send-otp', {
-        body: { phone: numericPhone },
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: numericPhone }),
       });
+      const data = await response.json();
 
-      if (error) throw new Error(error.message);
-      if (!data.success) throw new Error(data.error || 'Failed to send OTP.');
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Failed to send OTP.');
+      }
 
       toast({
         title: 'Code Sent!',
@@ -162,17 +169,21 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
   const handleOtpSubmit = async (submittedOtp) => {
     setIsLoading(true);
-    clearTimeout(unverifiedLeadTimer.current); // Cancel the unverified submission timer
-    
+    clearTimeout(unverifiedLeadTimer.current);
+
     const numericPhone = `+1${phone.replace(/\D/g, '')}`;
 
     try {
-      const { data, error } = await supabase.functions.invoke('verify-otp', {
-        body: { phone: numericPhone, code: submittedOtp },
+      const response = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: numericPhone, code: submittedOtp }),
       });
+      const data = await response.json();
 
-      if (error) throw new Error(error.message);
-      if (!data.success) throw new Error(data.error || 'Invalid verification code.');
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Invalid verification code.');
+      }
 
       toast({
         title: 'Phone Verified!',
@@ -181,19 +192,19 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
       });
 
       updateFormData('verified', true);
-      
+
       const finalLeadData = getLeadData(true);
       const eventId = crypto.randomUUID();
 
       // Save to Supabase DB
-      const { error: dbError } = await supabase.from('leads').insert([finalLeadData]);
+      const { error: dbError } = await supabase.from('term_leads').insert([finalLeadData]);
       if (dbError) {
         console.error('Error saving lead to DB:', dbError);
       }
 
       // Send to webhook & CAPI
       await sendLeadWebhook(finalLeadData, eventId);
-      
+
       // Track Facebook Pixel event with event ID for deduplication
       if (window.fbq) {
         window.fbq('track', 'Lead', {}, { eventID: eventId });
@@ -209,7 +220,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
         variant: 'destructive',
       });
       setOtp(['', '', '', '']);
-      scheduleUnverifiedLeadSubmission(); // Reschedule if OTP fails
+      scheduleUnverifiedLeadSubmission();
     } finally {
       setIsLoading(false);
     }
@@ -217,8 +228,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
 
   const goBack = () => {
-    // Only allow going back to previous quiz steps from 'details' view,
-    // or from 'otp' view back to 'details' view.
     if (currentView === 'otp') {
       clearTimeout(unverifiedLeadTimer.current);
       setCurrentView('details');
@@ -249,6 +258,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
                   setPhone={setPhone}
                   isLoading={isLoading}
                   onSubmit={handleDetailsSubmit}
+                  estimatedRate={formData.estimated_rate}
                 />
               </>
             )}
@@ -273,7 +283,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
         </AnimatePresence>
       </div>
 
-      {currentView === 'otp' && ( // Only show back button if currentView is 'otp'
+      {currentView === 'otp' && (
         <div className="mt-6 text-center">
           <button
             onClick={goBack}

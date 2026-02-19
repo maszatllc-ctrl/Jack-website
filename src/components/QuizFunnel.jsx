@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProgressBar from '@/components/ProgressBar';
-import StepProtect from '@/components/steps/StepProtect';
+import StepAge from '@/components/steps/StepAge';
 import StepBudget from '@/components/steps/StepBudget';
 import StepThree from '@/components/steps/StepThree';
 import StepFour from '@/components/steps/StepFour';
@@ -14,21 +14,31 @@ import Badges from '@/components/Badges';
 
 const QuizFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [geoState, setGeoState] = useState('');
   const [formData, setFormData] = useState({
-    protect: '',
+    age_range: '',
     smoker: '',
     health: '',
-    coverage_amount: '', // Changed from budget to coverage_amount
+    coverage_amount: '',
     zipCode: '',
     state: '',
     name: '',
     phone: '',
     verified: false,
+    estimated_rate: '',
   });
 
   useEffect(() => {
-    // Clear webhook session storage on first load
     sessionStorage.removeItem('webhookSent');
+
+    fetch('/api/geo')
+      .then(res => res.json())
+      .then(data => {
+        if (data.state) {
+          setGeoState(data.state);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const totalSteps = 7;
@@ -59,7 +69,7 @@ const QuizFunnel = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <StepProtect formData={formData} updateFormData={updateFormData} nextStep={nextStep} />;
+        return <StepAge formData={formData} updateFormData={updateFormData} nextStep={nextStep} />;
       case 1:
         return <StepFour formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
       case 2:
@@ -69,7 +79,7 @@ const QuizFunnel = () => {
       case 4:
         return <StepSix formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
       case 5:
-        return <StepLoading nextStep={nextStep} />;
+        return <StepLoading formData={formData} updateFormData={updateFormData} nextStep={nextStep} geoState={geoState} />;
       case 6:
         return <PhoneVerification formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
       case 7:
@@ -93,7 +103,7 @@ const QuizFunnel = () => {
                 exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, right: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                <SocialProof className="mb-4" />
+                <SocialProof className="mb-4" geoState={geoState} />
                 <div className="text-center mb-6 md:mb-8">
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Get Up To $1,000,000 Life Insurance From $1/Day</h1>
@@ -106,10 +116,10 @@ const QuizFunnel = () => {
         </div>
 
         {!isThankYouStep && !isLoadingStep && (
-          <ProgressBar 
-            currentStep={currentStep} 
-            totalSteps={totalSteps - 1} 
-            isLastStep={isPhoneVerificationStep} 
+          <ProgressBar
+            currentStep={currentStep}
+            totalSteps={totalSteps - 1}
+            isLastStep={isPhoneVerificationStep}
           />
         )}
 

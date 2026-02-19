@@ -31,7 +31,7 @@ const FinalReview = ({ zipCode, state }) => {
     >
       <div className="flex items-start gap-4">
         <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
-          <img className="w-full h-full object-cover" alt={`Happy customer ${testimonial.name}`} src="https://horizons-cdn.hostinger.com/6277cbe0-1200-4d04-bd5a-4eb3a1b485c8/360_f_497179961_q7qggtgng2kkn57ol4csde7utquozqmj-64ZVz.jpg" />
+          <img className="w-full h-full object-cover" alt={`Happy customer ${testimonial.name}`} src="/images/testimonial-caleb.jpg" />
         </div>
         <div>
           <div className="flex items-center mb-1">

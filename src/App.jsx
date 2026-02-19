@@ -7,7 +7,7 @@ import TermsOfUse from '@/pages/TermsOfUse';
 import Footer from '@/components/Footer';
 import { Toaster } from '@/components/ui/toaster';
 
-const FACEBOOK_PIXEL_ID = "1563134218041046";
+const FACEBOOK_PIXEL_ID = import.meta.env.VITE_FB_PIXEL_ID;
 
 function App() {
   const location = useLocation();

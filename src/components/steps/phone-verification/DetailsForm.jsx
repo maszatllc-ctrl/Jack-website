@@ -11,7 +11,8 @@ const DetailsForm = ({
   phone,
   setPhone,
   isLoading,
-  onSubmit
+  onSubmit,
+  estimatedRate
 }) => {
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [isNameValid, setIsNameValid] = useState(false);
@@ -80,7 +81,18 @@ const DetailsForm = ({
       </div>
 
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">We Found Your Best Rate</h2>
-      <p className="text-sm md:text-base text-gray-600 mb-8">Almost There — Where Can We Send Your Free Quote?</p>
+      <p className="text-sm md:text-base text-gray-600 mb-4">Almost There — Where Can We Send Your Free Quote?</p>
+
+      {estimatedRate && (
+        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-center">
+          <p className="text-lg font-bold text-green-800">
+            Rates starting from {estimatedRate}
+          </p>
+          <p className="text-xs text-green-600 mt-1">
+            * Estimated rate. Actual premium determined by licensed agent.
+          </p>
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>

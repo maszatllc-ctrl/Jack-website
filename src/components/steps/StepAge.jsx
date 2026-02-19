@@ -1,38 +1,38 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import OptionCard from '@/components/OptionCard';
-import { Heart, Baby, Users, Shield, ShieldQuestion } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 
-const StepProtect = ({ formData, updateFormData, nextStep }) => {
+const StepAge = ({ formData, updateFormData, nextStep }) => {
   const options = [
-    { 
-      value: 'spouse', 
-      icon: Heart, 
-      title: 'My spouse', 
-      subtitle: 'Ensure your partner is financially secure' 
+    {
+      value: '18-30',
+      icon: Calendar,
+      title: '18 - 30',
+      subtitle: 'Best rates available'
     },
-    { 
-      value: 'kids', 
-      icon: Baby, 
-      title: 'My kids', 
-      subtitle: 'Protect their future and education' 
+    {
+      value: '31-45',
+      icon: Calendar,
+      title: '31 - 45',
+      subtitle: 'Great rate options'
     },
-    { 
-      value: 'family', 
-      icon: Users, 
-      title: 'My family', 
-      subtitle: 'Comprehensive protection for loved ones' 
+    {
+      value: '46-65',
+      icon: Calendar,
+      title: '46 - 65',
+      subtitle: 'Competitive rates'
     },
-    { 
-      value: 'other', 
-      icon: Shield, 
-      title: 'Other', 
-      subtitle: 'Cover final expenses or business partners' 
+    {
+      value: '66+',
+      icon: Calendar,
+      title: '66+',
+      subtitle: 'Coverage options available'
     }
   ];
 
   const handleSelect = (value) => {
-    updateFormData('protect', value);
+    updateFormData('age_range', value);
     setTimeout(() => nextStep(), 400);
   };
 
@@ -45,11 +45,11 @@ const StepProtect = ({ formData, updateFormData, nextStep }) => {
       >
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
           <span className="p-2 bg-blue-100 rounded-full">
-            <ShieldQuestion className="w-6 h-6 md:w-7 md:h-7 text-blue-600" />
+            <Calendar className="w-6 h-6 md:w-7 md:h-7 text-blue-600" />
           </span>
-          Who do you want to protect?
+          How old are you?
         </h2>
-        <p className="text-sm md:text-base text-gray-600 pl-14">Choose the people who depend on you financially.</p>
+        <p className="text-sm md:text-base text-gray-600 pl-14">Your age helps us find the most accurate rates.</p>
       </motion.div>
 
       <div className="space-y-3 md:space-y-4">
@@ -59,7 +59,7 @@ const StepProtect = ({ formData, updateFormData, nextStep }) => {
             icon={option.icon}
             title={option.title}
             subtitle={option.subtitle}
-            selected={formData.protect === option.value}
+            selected={formData.age_range === option.value}
             onClick={() => handleSelect(option.value)}
             delay={index * 0.1}
           />
@@ -69,4 +69,4 @@ const StepProtect = ({ formData, updateFormData, nextStep }) => {
   );
 };
 
-export default StepProtect;
+export default StepAge;

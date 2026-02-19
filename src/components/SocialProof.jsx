@@ -2,7 +2,7 @@ import React from 'react';
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const SocialProof = ({ className = '' }) => {
+const SocialProof = ({ className = '', geoState = '' }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -14,7 +14,7 @@ const SocialProof = ({ className = '' }) => {
         <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
       </div>
       <span>
-        Trusted by <span className="font-bold">10,000+</span> Families
+        Trusted by <span className="font-bold">10,000+</span> Families{geoState ? ` in ${geoState}` : ''}
       </span>
     </motion.div>
   );

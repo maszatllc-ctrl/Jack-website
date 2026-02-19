@@ -15,17 +15,17 @@ const StepThree = ({
     value: 'excellent',
     icon: Heart,
     title: 'Excellent',
-    subtitle: 'No health issues, active lifestyle'
+    subtitle: 'You may qualify for the lowest rates!'
   }, {
     value: 'good',
     icon: Activity,
     title: 'Good',
-    subtitle: 'Minor conditions, well managed'
+    subtitle: 'Great options available for you'
   }, {
     value: 'fair',
     icon: Stethoscope,
     title: 'Fair',
-    subtitle: 'Some health concerns'
+    subtitle: 'We still have competitive plans'
   }];
   const handleSelect = value => {
     updateFormData('health', value);
