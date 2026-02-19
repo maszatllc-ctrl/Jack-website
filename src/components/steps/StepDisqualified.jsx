@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShieldX, Phone } from 'lucide-react';
+import { ShieldX, ArrowLeft } from 'lucide-react';
 
 const StepDisqualified = () => {
   return (
@@ -27,15 +27,15 @@ const StepDisqualified = () => {
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 max-w-sm mx-auto">
           <p className="text-sm text-blue-800 font-medium mb-3">
-            Want to explore other options?
+            Are you 68 or younger?
           </p>
-          <a
-            href="tel:+18001234567"
+          <button
+            onClick={() => window.location.reload()}
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
           >
-            <Phone className="w-4 h-4" />
-            Call Us For Assistance
-          </a>
+            <ArrowLeft className="w-4 h-4" />
+            Go Back & Try Again
+          </button>
         </div>
       </motion.div>
     </div>
