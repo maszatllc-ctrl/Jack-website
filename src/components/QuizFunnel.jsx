@@ -131,7 +131,7 @@ const QuizFunnel = () => {
 
                 {/* Gradient headline */}
                 <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  See If You Qualify For New 2026 Life Insurance Rates
+                  See If You Qualify For The New Life Insurance Rate Drop
                 </h1>
 
                 {/* Trust pills */}
