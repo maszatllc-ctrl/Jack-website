@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, ShieldCheck, Zap, Gift } from 'lucide-react';
+import { ShieldCheck, Zap } from 'lucide-react';
 import ProgressBar from '@/components/ProgressBar';
 import StepAge from '@/components/steps/StepAge';
 import StepThree from '@/components/steps/StepThree';
@@ -114,39 +114,35 @@ const QuizFunnel = () => {
                 exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, right: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                {/* Brand + State pill row */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-bold text-gray-800 tracking-tight">Quick Life Rates</span>
-                  {geoState && (
-                    <motion.span
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="inline-flex items-center gap-1 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full"
-                    >
-                      <MapPin className="w-3 h-3" />
-                      {geoState}
-                    </motion.span>
-                  )}
-                </div>
+                {/* State indicator with pulsing dot */}
+                {geoState && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center justify-center gap-2 mb-3"
+                  >
+                    <span className="relative flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                    </span>
+                    <span className="text-sm font-semibold text-gray-700">{geoState} Residents</span>
+                  </motion.div>
+                )}
 
-                {/* Headline */}
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-4">
-                  See If You Qualify For New 2026 Term Life Rates
+                {/* Gradient headline */}
+                <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  See If You Qualify For New 2026 Life Insurance Rates
                 </h1>
 
                 {/* Trust pills */}
                 <div className="flex items-center justify-center gap-2 md:gap-3 mb-5">
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1.5 rounded-full">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">
                     <ShieldCheck className="w-3.5 h-3.5 text-green-600" />
-                    No Exam
+                    No Medical Exam
                   </span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1.5 rounded-full">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">
                     <Zap className="w-3.5 h-3.5 text-yellow-500" />
-                    60 Seconds
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2.5 py-1.5 rounded-full">
-                    <Gift className="w-3.5 h-3.5 text-blue-500" />
-                    Free Quote
+                    Instant Results
                   </span>
                 </div>
               </motion.div>
