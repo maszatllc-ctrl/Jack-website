@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const getDailyQuoteCount = () => {
@@ -21,7 +21,7 @@ const SocialProof = ({ className = '', geoState = '' }) => {
       className={`flex items-center justify-center gap-2 text-sm md:text-base font-medium text-gray-700 ${className}`}
     >
       <div className="flex items-center gap-0.5">
-        <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
+        <Heart className="w-5 h-5 text-red-500" fill="currentColor" />
       </div>
       <span>
         <span className="font-bold">{quoteCount}</span> families saved on insurance this week{geoState ? ` in ${geoState}` : ''}

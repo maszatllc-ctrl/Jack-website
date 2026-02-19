@@ -10,7 +10,6 @@ import StepLoading from '@/components/steps/StepLoading';
 import PhoneVerification from '@/components/steps/PhoneVerification';
 import ThankYou from '@/components/steps/ThankYou';
 import SocialProof from '@/components/SocialProof';
-import Badges from '@/components/Badges';
 
 const STATE_NAMES = {
   AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
@@ -182,11 +181,6 @@ const QuizFunnel = () => {
         {/* Social proof below the card on step 0 only */}
         {showHeader && (
           <SocialProof className="mt-6" geoState={geoState} />
-        )}
-
-        {/* Badges on quiz steps 1-3 only (not step 0, not phone/loading/thankyou) */}
-        {!showHeader && !isPhoneVerificationStep && !isThankYouStep && !isLoadingStep && (
-          <Badges className="mt-8" />
         )}
       </div>
     </div>
