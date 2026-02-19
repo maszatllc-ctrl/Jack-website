@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { CheckCircle2 } from 'lucide-react';
 import { estimateRate } from '@/lib/rateEstimator';
 
 const carrierLogos = [
@@ -12,17 +13,12 @@ const carrierLogos = [
 ];
 
 const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
-  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [showGoodNews, setShowGoodNews] = useState(false);
   const rateStored = useRef(false);
 
   const stateName = formData.state || geoState || 'your area';
   const rate = estimateRate(formData);
-
-  const loadingTexts = [
-    `Comparing top carriers in ${stateName}…`,
-    rate ? `Based on your profile, rates start as low as $${rate}/mo` : 'Finding your best available rate…',
-  ];
 
   useEffect(() => {
     if (rate && !rateStored.current) {
@@ -32,21 +28,21 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
   }, [rate, updateFormData]);
 
   useEffect(() => {
-    const textInterval = setInterval(() => {
-      setLoadingTextIndex((prevIndex) => (prevIndex + 1) % loadingTexts.length);
-    }, 1250);
-
     const progressInterval = setInterval(() => {
       setProgress(p => (p >= 100 ? 100 : p + 4));
     }, 100);
 
+    const goodNewsTimer = setTimeout(() => {
+      setShowGoodNews(true);
+    }, 1500);
+
     const timer = setTimeout(() => {
       nextStep();
-    }, 2500);
+    }, 3000);
 
     return () => {
-      clearInterval(textInterval);
       clearInterval(progressInterval);
+      clearTimeout(goodNewsTimer);
       clearTimeout(timer);
     };
   }, [nextStep]);
@@ -56,6 +52,21 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-center justify-center text-center min-h-[450px]">
       <div className="w-full max-w-md">
+
+        {showGoodNews && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center gap-2"
+          >
+            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+            <p className="text-base font-semibold text-green-800">Good news! You may qualify for savings.</p>
+          </motion.div>
+        )}
+
+        <p className="text-lg md:text-xl font-semibold text-gray-700 mb-6">
+          Comparing top carriers in {stateName}…
+        </p>
 
         <div className="w-full overflow-hidden mb-8" style={{ maskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)' }}>
             <motion.div
@@ -77,7 +88,7 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
             </motion.div>
         </div>
 
-        <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-4">
+        <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
             initial={{ width: 0 }}
@@ -85,18 +96,6 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
             transition={{ duration: 0.1, ease: 'linear' }}
           />
         </div>
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={loadingTexts[loadingTextIndex]}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="text-lg md:text-xl font-semibold text-gray-700"
-          >
-            {loadingTexts[loadingTextIndex]}
-          </motion.p>
-        </AnimatePresence>
       </div>
     </div>
   );

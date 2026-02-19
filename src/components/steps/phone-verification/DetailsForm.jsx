@@ -82,17 +82,6 @@ const DetailsForm = ({
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">We Found Your Best Rate</h2>
       <p className="text-sm md:text-base text-gray-600 mb-4">Almost There — Where Can We Send Your Free Quote?</p>
 
-      {estimatedRate && (
-        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl text-center">
-          <p className="text-lg font-bold text-green-800">
-            Rates starting from {estimatedRate}
-          </p>
-          <p className="text-xs text-green-600 mt-1">
-            * Estimated rate. Actual premium determined by licensed agent.
-          </p>
-        </div>
-      )}
-      
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
@@ -117,7 +106,7 @@ const DetailsForm = ({
               </motion.div>}
           </div>
         </div>
-        <Button type="submit" className="w-full py-6 text-base md:text-lg font-semibold bg-green-600 hover:bg-green-700" disabled={isLoading}>
+        <Button type="submit" className="w-full py-6 text-base md:text-lg font-semibold bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
           {isLoading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : 'See My Rate'}
         </Button>
       </form>

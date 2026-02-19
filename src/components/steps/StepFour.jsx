@@ -15,7 +15,7 @@ const StepFour = ({
     value: 'no',
     icon: X,
     title: 'No',
-    subtitle: 'You may qualify the best rates'
+    subtitle: 'You may qualify for the best rates'
   }, {
     value: 'yes',
     icon: Check,
