@@ -64,16 +64,6 @@ const ThankYou = ({ formData }) => {
 
         <div className="flex gap-4 items-start">
           <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
-            <MessageSquare className="w-5 h-5 text-blue-600" />
-          </div>
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-1">Check Your Text Messages</h4>
-            <p className="text-sm text-gray-600">You'll receive an SMS with your agent's contact info so you can reach them anytime</p>
-          </div>
-        </div>
-
-        <div className="flex gap-4 items-start">
-          <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
             <Phone className="w-5 h-5 text-blue-600" />
           </div>
           <div>
