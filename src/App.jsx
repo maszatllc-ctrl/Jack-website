@@ -59,8 +59,8 @@ function App() {
   return (
     <>
       <Helmet>
-        <title>Life Insurance Quote - Get Covered in 2 Minutes | Free Quote</title>
-        <meta name="description" content="Get your personalized life insurance quote in just 2 minutes. Compare rates from top providers and protect your family's future today. No obligations, 100% free." />
+        <title>Family Guards - See If You Qualify For New Life Insurance Rates</title>
+        <meta name="description" content="See if you qualify for the new life insurance rate drop. Compare rates from A+ rated carriers and protect your family's future. No medical exam required." />
         <script>
           {`
             (function() {

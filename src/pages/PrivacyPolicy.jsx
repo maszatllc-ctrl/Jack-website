@@ -8,8 +8,8 @@ const PrivacyPolicy = () => {
   return (
     <div className="container mx-auto p-8 max-w-3xl">
       <Helmet>
-        <title>Privacy Policy - Quick Life Rates</title>
-        <meta name="description" content="Read the privacy policy for Quick Life Rates. We are committed to protecting your personal information and privacy." />
+        <title>Privacy Policy - Family Guards</title>
+        <meta name="description" content="Read the privacy policy for Family Guards. We are committed to protecting your personal information and privacy." />
       </Helmet>
       <div className="mb-6">
         <Button variant="ghost" asChild className="-ml-2 text-gray-600 hover:text-gray-900">
@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
       </div>
       <h1 className="text-4xl font-bold text-gray-900 mb-6">Privacy Policy</h1>
       <p className="text-gray-700 mb-4">
-        This Privacy Policy describes how Quick Life Rates ("we," "us," or "our") collects, uses, and shares your personal information when you use our website.
+        This Privacy Policy describes how Family Guards ("we," "us," or "our") collects, uses, and shares your personal information when you use our website.
       </p>
 
       <h2 className="text-2xl font-semibold text-gray-800 mb-3 mt-6">Information We Collect</h2>

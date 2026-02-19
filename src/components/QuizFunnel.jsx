@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Zap } from 'lucide-react';
+import { ShieldCheck, Award } from 'lucide-react';
 import ProgressBar from '@/components/ProgressBar';
 import StepAge from '@/components/steps/StepAge';
 import StepThree from '@/components/steps/StepThree';
@@ -114,24 +114,27 @@ const QuizFunnel = () => {
                 exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, right: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                {/* State indicator with pulsing dot */}
+                {/* State indicator pill */}
                 {geoState && (
                   <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex items-center justify-center gap-2 mb-3"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center justify-center mb-4"
                   >
-                    <span className="relative flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                    <span className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-1.5 rounded-full text-sm font-semibold shadow-sm">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      </span>
+                      {geoState} Residents
                     </span>
-                    <span className="text-sm font-semibold text-gray-700">{geoState} Residents</span>
                   </motion.div>
                 )}
 
-                {/* Gradient headline */}
-                <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  See If You Qualify For The New Life Insurance Rate Drop
+                {/* Two-color headline */}
+                <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-4">
+                  <span className="text-gray-900">See If You Qualify For</span>{' '}
+                  <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">The New Life Insurance Rate Drop</span>
                 </h1>
 
                 {/* Trust pills */}
@@ -141,8 +144,8 @@ const QuizFunnel = () => {
                     No Medical Exam
                   </span>
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">
-                    <Zap className="w-3.5 h-3.5 text-yellow-500" />
-                    Instant Results
+                    <Award className="w-3.5 h-3.5 text-blue-600" />
+                    A+ Rated Carriers
                   </span>
                 </div>
               </motion.div>
