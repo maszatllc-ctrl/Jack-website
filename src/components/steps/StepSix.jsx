@@ -36,11 +36,6 @@ const StepSix = ({
       const data = await response.json();
       const state = data.places[0]['state abbreviation'];
       updateFormData('state', state);
-      toast({
-        title: "Great news!",
-        description: `Competitive rates available in ${state}`,
-        className: "bg-green-500 text-white",
-      });
       nextStep();
     } catch (error) {
       toast({

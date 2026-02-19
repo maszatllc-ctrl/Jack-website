@@ -14,9 +14,10 @@ const carrierLogos = [
 
 const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
   const [progress, setProgress] = useState(0);
-  const [showGoodNews, setShowGoodNews] = useState(false);
+  const [phase, setPhase] = useState('searching'); // 'searching' | 'found'
   const rateStored = useRef(false);
 
+  const stateName = formData.state || geoState || 'your area';
   const rate = estimateRate(formData);
 
   useEffect(() => {
@@ -31,22 +32,17 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
       setProgress(p => (p >= 100 ? 100 : p + 4));
     }, 100);
 
-    const goodNewsTimer = setTimeout(() => {
-      setShowGoodNews(true);
-    }, 1500);
-
-    const hideGoodNews = setTimeout(() => {
-      setShowGoodNews(false);
-    }, 3200);
+    const foundTimer = setTimeout(() => {
+      setPhase('found');
+    }, 2500);
 
     const timer = setTimeout(() => {
       nextStep();
-    }, 3500);
+    }, 3800);
 
     return () => {
       clearInterval(progressInterval);
-      clearTimeout(goodNewsTimer);
-      clearTimeout(hideGoodNews);
+      clearTimeout(foundTimer);
       clearTimeout(timer);
     };
   }, [nextStep]);
@@ -57,12 +53,23 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
     <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-center justify-center text-center min-h-[450px]">
       <div className="w-full max-w-md">
 
-        <AnimatePresence>
-          {showGoodNews && (
+        <AnimatePresence mode="wait">
+          {phase === 'searching' ? (
+            <motion.p
+              key="searching"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="text-lg md:text-xl font-semibold text-gray-700 mb-6"
+            >
+              Comparing top carriers in {stateName}…
+            </motion.p>
+          ) : (
             <motion.div
+              key="found"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
               className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center gap-2"
             >
