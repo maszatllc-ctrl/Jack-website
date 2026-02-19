@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Award } from 'lucide-react';
 import ProgressBar from '@/components/ProgressBar';
 import StepAge from '@/components/steps/StepAge';
 import StepThree from '@/components/steps/StepThree';
@@ -132,22 +131,15 @@ const QuizFunnel = () => {
                 )}
 
                 {/* Two-color headline */}
-                <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-4">
-                  <span className="text-gray-900">See If You Qualify For</span>{' '}
-                  <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">The New Life Insurance Rate Drop</span>
+                <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-2">
+                  <span className="text-gray-900">Save Up To 38% On</span>{' '}
+                  <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Life Insurance</span>
                 </h1>
 
-                {/* Trust pills */}
-                <div className="flex items-center justify-center gap-2 md:gap-3 mb-5">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">
-                    <ShieldCheck className="w-3.5 h-3.5 text-green-600" />
-                    No Medical Exam
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">
-                    <Award className="w-3.5 h-3.5 text-blue-600" />
-                    A+ Rated Carriers
-                  </span>
-                </div>
+                {/* Subheadline */}
+                <p className="text-sm md:text-base text-gray-500 text-center mb-5">
+                  Answer 4 quick questions to see if you qualify
+                </p>
               </motion.div>
             )}
           </AnimatePresence>

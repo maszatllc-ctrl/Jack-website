@@ -24,7 +24,7 @@ const SocialProof = ({ className = '', geoState = '' }) => {
         <Star className="w-5 h-5 text-yellow-400" fill="currentColor" />
       </div>
       <span>
-        <span className="font-bold">{quoteCount}</span> families helped this week{geoState ? ` in ${geoState}` : ''}
+        <span className="font-bold">{quoteCount}</span> families saved on insurance this week{geoState ? ` in ${geoState}` : ''}
       </span>
     </motion.div>
   );
