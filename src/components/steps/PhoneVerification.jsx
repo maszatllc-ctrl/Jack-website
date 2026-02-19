@@ -57,6 +57,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
   const [isLoading, setIsLoading] = useState(false);
   const [otp, setOtp] = useState(['', '', '', '']);
   const [name, setName] = useState(formData.name || '');
+  const [email, setEmail] = useState(formData.email || '');
   const [phone, setPhone] = useState(formData.phone || '');
   const { toast } = useToast();
 
@@ -92,6 +93,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
     return {
       name,
+      email,
       phone: numericPhone,
       age_range: formData.age_range,
       smoker: formData.smoker,
@@ -152,6 +154,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
   const handleDetailsSubmit = () => {
     updateFormData('name', name);
+    updateFormData('email', email);
     updateFormData('phone', phone);
     sendOtp();
   };
@@ -249,6 +252,8 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
                 <DetailsForm
                   name={name}
                   setName={setName}
+                  email={email}
+                  setEmail={setEmail}
                   phone={phone}
                   setPhone={setPhone}
                   isLoading={isLoading}

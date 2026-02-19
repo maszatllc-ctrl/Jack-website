@@ -9,6 +9,7 @@ import StepSix from '@/components/steps/StepSix';
 import StepLoading from '@/components/steps/StepLoading';
 import PhoneVerification from '@/components/steps/PhoneVerification';
 import ThankYou from '@/components/steps/ThankYou';
+import StepDisqualified from '@/components/steps/StepDisqualified';
 import SocialProof from '@/components/SocialProof';
 
 const STATE_NAMES = {
@@ -27,6 +28,7 @@ const STATE_NAMES = {
 
 const QuizFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [disqualified, setDisqualified] = useState(false);
   const [geoState, setGeoState] = useState('');
   const [geoStateAbbr, setGeoStateAbbr] = useState('');
   const [formData, setFormData] = useState({
@@ -36,6 +38,7 @@ const QuizFunnel = () => {
     zipCode: '',
     state: '',
     name: '',
+    email: '',
     phone: '',
     verified: false,
     estimated_rate: '',
@@ -83,7 +86,7 @@ const QuizFunnel = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <StepAge formData={formData} updateFormData={updateFormData} nextStep={nextStep} />;
+        return <StepAge formData={formData} updateFormData={updateFormData} nextStep={nextStep} onDisqualify={() => setDisqualified(true)} />;
       case 1:
         return <StepFour formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
       case 2:
@@ -104,13 +107,14 @@ const QuizFunnel = () => {
   const isThankYouStep = currentStep === totalSteps;
   const isPhoneVerificationStep = currentStep === 5;
   const isLoadingStep = currentStep === 4;
+  const isDisqualifiedOrDone = disqualified || isThankYouStep;
 
   return (
     <div className="py-4 md:py-8 px-4 w-full">
       <div className="max-w-3xl mx-auto">
         <div className="relative">
           <AnimatePresence>
-            {showHeader && !isThankYouStep && (
+            {showHeader && !isDisqualifiedOrDone && (
               <motion.div
                 exit={{ opacity: 0, position: 'absolute', top: 0, left: 0, right: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -159,7 +163,7 @@ const QuizFunnel = () => {
           </AnimatePresence>
         </div>
 
-        {!isThankYouStep && !isLoadingStep && !isPhoneVerificationStep && (
+        {!isDisqualifiedOrDone && !isLoadingStep && !isPhoneVerificationStep && (
           <ProgressBar
             currentStep={currentStep}
             totalSteps={totalSteps - 1}
@@ -170,18 +174,18 @@ const QuizFunnel = () => {
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentStep}
+            key={disqualified ? 'disqualified' : currentStep}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {renderStep()}
+            {disqualified ? <StepDisqualified /> : renderStep()}
           </motion.div>
         </AnimatePresence>
 
         {/* Social proof below the card on steps 0-2 (not zip, loading, phone, thankyou) */}
-        {currentStep <= 2 && (
+        {!disqualified && currentStep <= 2 && (
           <SocialProof className="mt-6" stateAbbr={geoStateAbbr} />
         )}
       </div>

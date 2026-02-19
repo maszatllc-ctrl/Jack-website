@@ -6,10 +6,8 @@
  */
 
 const BASE_RATES = {
-  '18-30': { base: 25, smokerMultiplier: 2.0 },
-  '31-45': { base: 38, smokerMultiplier: 2.2 },
-  '46-65': { base: 75, smokerMultiplier: 2.5 },
-  '66+': { base: 145, smokerMultiplier: 3.0 },
+  '18-39': { base: 28, smokerMultiplier: 2.0 },
+  '40-68': { base: 55, smokerMultiplier: 2.4 },
 };
 
 const HEALTH_MULTIPLIERS = {

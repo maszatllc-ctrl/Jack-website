@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Phone, User, Loader2, ShieldCheck, Award, CheckCircle2 } from 'lucide-react';
+import { Phone, User, Mail, Loader2, ShieldCheck, Award, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const DetailsForm = ({
   name,
   setName,
+  email,
+  setEmail,
   phone,
   setPhone,
   isLoading,
@@ -15,6 +17,7 @@ const DetailsForm = ({
 }) => {
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [isNameValid, setIsNameValid] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(false);
   const {
     toast
   } = useToast();
@@ -23,9 +26,11 @@ const DetailsForm = ({
   useEffect(() => {
     const phoneIsValid = phone.replace(/\D/g, '').length === 10;
     const nameIsValid = name.trim().length >= 2;
+    const emailIsValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     setIsPhoneValid(phoneIsValid);
     setIsNameValid(nameIsValid);
-  }, [phone, name]);
+    setIsEmailValid(emailIsValid);
+  }, [phone, name, email]);
 
   const handlePhoneChange = e => {
     const input = e.target.value.replace(/\D/g, '');
@@ -49,6 +54,14 @@ const DetailsForm = ({
       toast({
         title: 'Invalid Name',
         description: 'Please enter your full name.',
+        variant: 'destructive'
+      });
+      return;
+    }
+    if (!isEmailValid) {
+      toast({
+        title: 'Invalid Email',
+        description: 'Please enter a valid email address.',
         variant: 'destructive'
       });
       return;
@@ -88,6 +101,22 @@ const DetailsForm = ({
           <div className="relative">
             <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="John Doe" className="w-full pl-11 pr-4 py-3 md:py-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-base md:text-lg transition-colors" required />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="john@example.com" className="w-full pl-11 pr-11 py-3 md:py-4 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none text-base md:text-lg transition-colors" required />
+            {isEmailValid && <motion.div initial={{
+            scale: 0,
+            opacity: 0
+          }} animate={{
+            scale: 1,
+            opacity: 1
+          }} className="absolute right-3 inset-y-0 my-auto flex items-center">
+                <CheckCircle2 className="w-7 h-7 text-green-500" />
+              </motion.div>}
           </div>
         </div>
         <div>

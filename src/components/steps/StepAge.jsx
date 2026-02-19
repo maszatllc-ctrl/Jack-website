@@ -3,37 +3,35 @@ import { motion } from 'framer-motion';
 import OptionCard from '@/components/OptionCard';
 import { User, Users, Glasses, Armchair, Calendar } from 'lucide-react';
 
-const StepAge = ({ formData, updateFormData, nextStep }) => {
+const StepAge = ({ formData, updateFormData, nextStep, onDisqualify }) => {
   const options = [
     {
-      value: '18-30',
+      value: '18-39',
       icon: User,
-      title: '18 - 30',
+      title: '18 - 39',
       subtitle: 'Best rates available'
     },
     {
-      value: '31-45',
+      value: '40-68',
       icon: Users,
-      title: '31 - 45',
-      subtitle: 'Strong approval'
+      title: '40 - 68',
+      subtitle: 'Great coverage options'
     },
     {
-      value: '46-65',
-      icon: Glasses,
-      title: '46 - 65',
-      subtitle: 'Good coverage'
-    },
-    {
-      value: '66+',
+      value: '69+',
       icon: Armchair,
-      title: '66+',
+      title: '69+',
       subtitle: 'Limited options'
     }
   ];
 
   const handleSelect = (value) => {
     updateFormData('age_range', value);
-    setTimeout(() => nextStep(), 400);
+    if (value === '69+') {
+      setTimeout(() => onDisqualify(), 400);
+    } else {
+      setTimeout(() => nextStep(), 400);
+    }
   };
 
   return (
