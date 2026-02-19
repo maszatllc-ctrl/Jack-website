@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2 } from 'lucide-react';
 import { estimateRate } from '@/lib/rateEstimator';
 
@@ -17,7 +17,6 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
   const [showGoodNews, setShowGoodNews] = useState(false);
   const rateStored = useRef(false);
 
-  const stateName = formData.state || geoState || 'your area';
   const rate = estimateRate(formData);
 
   useEffect(() => {
@@ -36,13 +35,18 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
       setShowGoodNews(true);
     }, 1500);
 
+    const hideGoodNews = setTimeout(() => {
+      setShowGoodNews(false);
+    }, 3200);
+
     const timer = setTimeout(() => {
       nextStep();
-    }, 3000);
+    }, 3500);
 
     return () => {
       clearInterval(progressInterval);
       clearTimeout(goodNewsTimer);
+      clearTimeout(hideGoodNews);
       clearTimeout(timer);
     };
   }, [nextStep]);
@@ -53,20 +57,20 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
     <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 flex flex-col items-center justify-center text-center min-h-[450px]">
       <div className="w-full max-w-md">
 
-        {showGoodNews && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center gap-2"
-          >
-            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-            <p className="text-base font-semibold text-green-800">Good news! You may qualify for savings.</p>
-          </motion.div>
-        )}
-
-        <p className="text-lg md:text-xl font-semibold text-gray-700 mb-6">
-          Comparing top carriers in {stateName}…
-        </p>
+        <AnimatePresence>
+          {showGoodNews && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center gap-2"
+            >
+              <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <p className="text-base font-semibold text-green-800">Good news! You may qualify for savings.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className="w-full overflow-hidden mb-8" style={{ maskImage: 'linear-gradient(to right, transparent, black 20%, black 80%, transparent)' }}>
             <motion.div
