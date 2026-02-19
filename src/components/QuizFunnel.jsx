@@ -28,6 +28,7 @@ const STATE_NAMES = {
 const QuizFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [geoState, setGeoState] = useState('');
+  const [geoStateAbbr, setGeoStateAbbr] = useState('');
   const [formData, setFormData] = useState({
     age_range: '',
     smoker: '',
@@ -48,6 +49,7 @@ const QuizFunnel = () => {
       .then(data => {
         if (data.state) {
           setGeoState(STATE_NAMES[data.state] || data.state);
+          setGeoStateAbbr(data.state);
         }
       })
       .catch(() => {});
@@ -178,9 +180,9 @@ const QuizFunnel = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Social proof below the card on step 0 only */}
-        {showHeader && (
-          <SocialProof className="mt-6" geoState={geoState} />
+        {/* Social proof below the card on steps 0-2 (not zip, loading, phone, thankyou) */}
+        {currentStep <= 2 && (
+          <SocialProof className="mt-6" stateAbbr={geoStateAbbr} />
         )}
       </div>
     </div>

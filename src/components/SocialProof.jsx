@@ -10,7 +10,7 @@ const getDailyQuoteCount = () => {
   return weekCount.toLocaleString();
 };
 
-const SocialProof = ({ className = '' }) => {
+const SocialProof = ({ className = '', stateAbbr = '' }) => {
   const quoteCount = getDailyQuoteCount();
 
   return (
@@ -24,7 +24,7 @@ const SocialProof = ({ className = '' }) => {
         <Heart className="w-5 h-5 text-red-500" fill="currentColor" />
       </div>
       <span>
-        <span className="font-bold">{quoteCount}</span> families saved on insurance
+        <span className="font-bold">{quoteCount}</span> families saved on insurance{stateAbbr ? ` in ${stateAbbr}` : ''}
       </span>
     </motion.div>
   );
