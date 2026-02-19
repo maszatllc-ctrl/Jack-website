@@ -1,31 +1,31 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import OptionCard from '@/components/OptionCard';
-import { Calendar } from 'lucide-react';
+import { Sparkles, Users, Briefcase, Heart, Calendar } from 'lucide-react';
 
 const StepAge = ({ formData, updateFormData, nextStep }) => {
   const options = [
     {
       value: '18-30',
-      icon: Calendar,
+      icon: Sparkles,
       title: '18 - 30',
       subtitle: 'Best rates available'
     },
     {
       value: '31-45',
-      icon: Calendar,
+      icon: Users,
       title: '31 - 45',
       subtitle: 'Great rate options'
     },
     {
       value: '46-65',
-      icon: Calendar,
+      icon: Briefcase,
       title: '46 - 65',
       subtitle: 'Competitive rates'
     },
     {
       value: '66+',
-      icon: Calendar,
+      icon: Heart,
       title: '66+',
       subtitle: 'Coverage options available'
     }
