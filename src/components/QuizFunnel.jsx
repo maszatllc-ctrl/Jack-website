@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProgressBar from '@/components/ProgressBar';
 import StepAge from '@/components/steps/StepAge';
-import StepBudget from '@/components/steps/StepBudget';
 import StepThree from '@/components/steps/StepThree';
 import StepFour from '@/components/steps/StepFour';
 import StepSix from '@/components/steps/StepSix';
@@ -12,6 +11,20 @@ import ThankYou from '@/components/steps/ThankYou';
 import SocialProof from '@/components/SocialProof';
 import Badges from '@/components/Badges';
 
+const STATE_NAMES = {
+  AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
+  CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia',
+  HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa',
+  KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland',
+  MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri',
+  MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey',
+  NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio',
+  OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina',
+  SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont',
+  VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming',
+  DC: 'District of Columbia',
+};
+
 const QuizFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [geoState, setGeoState] = useState('');
@@ -19,7 +32,6 @@ const QuizFunnel = () => {
     age_range: '',
     smoker: '',
     health: '',
-    coverage_amount: '',
     zipCode: '',
     state: '',
     name: '',
@@ -35,13 +47,13 @@ const QuizFunnel = () => {
       .then(res => res.json())
       .then(data => {
         if (data.state) {
-          setGeoState(data.state);
+          setGeoState(STATE_NAMES[data.state] || data.state);
         }
       })
       .catch(() => {});
   }, []);
 
-  const totalSteps = 7;
+  const totalSteps = 6;
 
   const showHeader = currentStep === 0;
 
@@ -75,14 +87,12 @@ const QuizFunnel = () => {
       case 2:
         return <StepThree formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
       case 3:
-        return <StepBudget formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
-      case 4:
         return <StepSix formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
-      case 5:
+      case 4:
         return <StepLoading formData={formData} updateFormData={updateFormData} nextStep={nextStep} geoState={geoState} />;
-      case 6:
+      case 5:
         return <PhoneVerification formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
-      case 7:
+      case 6:
         return <ThankYou formData={formData} />;
       default:
         return null;
@@ -90,8 +100,8 @@ const QuizFunnel = () => {
   };
 
   const isThankYouStep = currentStep === totalSteps;
-  const isPhoneVerificationStep = currentStep === 6;
-  const isLoadingStep = currentStep === 5;
+  const isPhoneVerificationStep = currentStep === 5;
+  const isLoadingStep = currentStep === 4;
 
   return (
     <div className="py-4 md:py-8 px-4 w-full">
@@ -106,9 +116,13 @@ const QuizFunnel = () => {
                 <SocialProof className="mb-4" geoState={geoState} />
                 <div className="text-center mb-6 md:mb-8">
                   <div className="flex items-center justify-center gap-2 mb-3">
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Get Up To $1,000,000 Life Insurance From $1/Day</h1>
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                      {geoState
+                        ? `${geoState} Residents: See If You Qualify For New 2026 Term Life Rates`
+                        : 'See If You Qualify For New 2026 Term Life Rates'}
+                    </h1>
                   </div>
-                  <p className="text-base md:text-lg text-gray-600">Check Your Best Rate In 60 Seconds — No Medical Exam Required</p>
+                  <p className="text-base md:text-lg text-gray-600">Answer 4 Quick Questions — No Medical Exam Required</p>
                 </div>
               </motion.div>
             )}

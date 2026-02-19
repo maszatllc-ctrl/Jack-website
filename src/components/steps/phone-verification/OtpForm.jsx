@@ -12,7 +12,8 @@ const OtpForm = ({
   resendCount,
   maxResends,
   onResend,
-  onBack
+  onBack,
+  maskedPhone
 }) => {
   const otpInputs = useRef([]);
   const { toast } = useToast();
@@ -90,7 +91,9 @@ const OtpForm = ({
   return (
     <>
       <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Enter Verification Code</h2>
-      <p className="text-sm md:text-base text-gray-600 mb-8">A 4-digit code was sent to your phone. Enter it below.</p>
+      <p className="text-sm md:text-base text-gray-600 mb-8">
+        We texted a 4-digit code to {maskedPhone || 'your phone'}. Enter it below.
+      </p>
       <form onSubmit={handleSubmit}>
         <div className="flex justify-center gap-2 md:gap-4 mb-6">
           {otp.map((digit, index) => (

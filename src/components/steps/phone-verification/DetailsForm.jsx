@@ -118,11 +118,11 @@ const DetailsForm = ({
               </motion.div>}
           </div>
         </div>
-        <Button type="submit" className="w-full py-6 text-base md:text-lg font-semibold bg-blue-600 hover:bg-blue-700" disabled={isLoading}>
-          {isLoading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : 'Get My Quote'}
+        <Button type="submit" className="w-full py-6 text-base md:text-lg font-semibold bg-green-600 hover:bg-green-700" disabled={isLoading}>
+          {isLoading ? <Loader2 className="mr-2 h-6 w-6 animate-spin" /> : 'See My Rate'}
         </Button>
       </form>
-      <p className="text-xs text-gray-500 text-center mt-4">🔒 Your data is safe. By clicking “Get My Quote”, you agree to be contacted by a licensed agent via phone or text</p>
+      <p className="text-xs text-gray-500 text-center mt-4">🔒 Your data is safe. By clicking "See My Rate", you agree to be contacted by a licensed agent via phone or text</p>
       <Badges className="mt-8" />
     </>;
 };

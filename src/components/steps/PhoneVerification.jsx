@@ -96,7 +96,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
       age_range: formData.age_range,
       smoker: formData.smoker,
       health: formData.health,
-      coverage: formData.coverage_amount,
       zip_code: formData.zipCode,
       state: formData.state,
       estimated_rate: formData.estimated_rate || null,
@@ -277,6 +276,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
                   clearTimeout(unverifiedLeadTimer.current);
                   setCurrentView('details');
                 }}
+                maskedPhone={phone ? `(***) ***-${phone.replace(/\D/g, '').slice(-4)}` : ''}
               />
             )}
           </motion.div>
