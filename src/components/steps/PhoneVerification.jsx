@@ -133,10 +133,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
         throw new Error(data.error || 'Failed to send OTP.');
       }
 
-      toast({
-        title: 'Code Sent!',
-        description: 'A verification code has been sent to your phone.',
-      });
       setCurrentView('otp');
       setResendCount(c => c + 1);
       startCooldown();
