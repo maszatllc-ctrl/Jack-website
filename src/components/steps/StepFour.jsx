@@ -13,12 +13,12 @@ const StepFour = ({
 }) => {
   const options = [{
     value: 'no',
-    icon: Check,
-    title: 'No, I don\'t use them',
-    subtitle: 'You may qualify for preferred rates'
+    icon: X,
+    title: 'No',
+    subtitle: 'You may qualify the best rates'
   }, {
     value: 'yes',
-    icon: X,
+    icon: Check,
     title: 'Yes, I use them',
     subtitle: 'We still have great options'
   }];

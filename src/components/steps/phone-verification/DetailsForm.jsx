@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Phone, User, Loader2, ShieldCheck, Award, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import Badges from '@/components/Badges';
 
 const DetailsForm = ({
   name,
@@ -123,7 +122,6 @@ const DetailsForm = ({
         </Button>
       </form>
       <p className="text-xs text-gray-500 text-center mt-4">🔒 Your data is safe. By clicking "See My Rate", you agree to be contacted by a licensed agent via phone or text</p>
-      <Badges className="mt-8" />
     </>;
 };
 export default DetailsForm;

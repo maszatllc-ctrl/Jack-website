@@ -15,17 +15,17 @@ const StepThree = ({
     value: 'excellent',
     icon: Heart,
     title: 'Excellent',
-    subtitle: 'You may qualify for the lowest rates!'
+    subtitle: 'No major conditions, no daily medications'
   }, {
     value: 'good',
     icon: Activity,
     title: 'Good',
-    subtitle: 'Great options available for you'
+    subtitle: 'Minor conditions, well-managed with medication'
   }, {
     value: 'fair',
     icon: Stethoscope,
     title: 'Fair',
-    subtitle: 'We still have competitive plans'
+    subtitle: 'Ongoing conditions or recent treatments'
   }];
   const handleSelect = value => {
     updateFormData('health', value);
@@ -50,7 +50,7 @@ const StepThree = ({
           </span>
           How would you rate your health?
         </h2>
-        <p className="text-sm md:text-base text-gray-600 pl-14">This helps us find the best rates for you.</p>
+        <p className="text-sm md:text-base text-gray-600 pl-14">This helps us find the best carrier for you.</p>
       </motion.div>
 
       <div className="space-y-3 md:space-y-4">
