@@ -2,7 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldX, ArrowLeft } from 'lucide-react';
 
-const StepDisqualified = () => {
+const StepDisqualified = ({ reason = 'age' }) => {
+  const isTobacco = reason === 'tobacco';
+
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
       <motion.div
@@ -22,12 +24,16 @@ const StepDisqualified = () => {
         </h2>
 
         <p className="text-base md:text-lg text-gray-600 mb-6 max-w-md mx-auto">
-          Unfortunately, we're unable to find online coverage options for your age group at this time.
+          {isTobacco
+            ? "Unfortunately, we're unable to offer online coverage to tobacco or nicotine users at this time."
+            : "Unfortunately, we're unable to find online coverage options for your age group at this time."}
         </p>
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 max-w-sm mx-auto">
           <p className="text-sm text-blue-800 font-medium mb-3">
-            Are you 68 or younger?
+            {isTobacco
+              ? "Don't use tobacco or nicotine?"
+              : "Are you 68 or younger?"}
           </p>
           <button
             onClick={() => window.location.reload()}

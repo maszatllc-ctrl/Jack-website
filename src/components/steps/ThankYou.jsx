@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Phone, MessageSquare, Clock } from 'lucide-react';
+import { CheckCircle2, Phone, Clock } from 'lucide-react';
 
 const ThankYou = ({ formData }) => {
   return (
@@ -23,26 +23,27 @@ const ThankYou = ({ formData }) => {
         className="text-center mb-8"
       >
         <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-3">
-          You're All Set!
+          Thank You, {formData.name ? formData.name.split(' ')[0] : ''}!
         </h2>
-        <p className="text-base md:text-lg text-gray-600">We've received your information and are preparing your personalized quote</p>
+        <p className="text-base md:text-lg text-gray-600 max-w-md mx-auto">
+          We have all the information we need to find you the best rate.
+        </p>
       </motion.div>
 
-      {formData.estimated_rate && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-8 p-4 bg-green-50 border border-green-200 rounded-xl text-center"
-        >
-          <p className="text-lg font-bold text-green-800">
-            Your estimated rate: {formData.estimated_rate}
-          </p>
-          <p className="text-xs text-green-600 mt-1">
-            Your agent will confirm your exact rate on the call.
-          </p>
-        </motion.div>
-      )}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mb-8 p-5 bg-blue-50 border border-blue-200 rounded-xl text-center"
+      >
+        <Phone className="w-8 h-8 text-blue-600 mx-auto mb-3" />
+        <p className="text-lg font-bold text-blue-900 mb-1">
+          Please expect a call shortly
+        </p>
+        <p className="text-sm text-blue-700">
+          A licensed agent is reviewing your information and will call you back in just a few minutes with your best rate.
+        </p>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -57,8 +58,8 @@ const ThankYou = ({ formData }) => {
             <Clock className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-1">Expect a Call Within 5–10 Minutes</h4>
-            <p className="text-sm text-gray-600">A licensed agent will reach out to review your best options and answer any questions</p>
+            <h4 className="font-semibold text-gray-900 mb-1">A Licensed Agent Will Call You</h4>
+            <p className="text-sm text-gray-600">They'll find the best rate for your situation and walk you through your options — no obligation to purchase</p>
           </div>
         </div>
 
@@ -67,8 +68,8 @@ const ThankYou = ({ formData }) => {
             <Phone className="w-5 h-5 text-blue-600" />
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-1">No Pressure, Just Options</h4>
-            <p className="text-sm text-gray-600">Your agent will walk you through your best plans — no obligation to purchase</p>
+            <h4 className="font-semibold text-gray-900 mb-1">Keep Your Phone Nearby</h4>
+            <p className="text-sm text-gray-600">Your agent will be reaching out shortly — please keep an eye out for an incoming call</p>
           </div>
         </div>
       </motion.div>
