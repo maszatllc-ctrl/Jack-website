@@ -28,7 +28,7 @@ const STATE_NAMES = {
 
 const QuizFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const [disqualified, setDisqualified] = useState(false);
+  const [disqualified, setDisqualified] = useState('');
   const [geoState, setGeoState] = useState('');
   const [geoStateAbbr, setGeoStateAbbr] = useState('');
   const [formData, setFormData] = useState({
@@ -86,9 +86,9 @@ const QuizFunnel = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return <StepAge formData={formData} updateFormData={updateFormData} nextStep={nextStep} onDisqualify={() => setDisqualified(true)} />;
+        return <StepAge formData={formData} updateFormData={updateFormData} nextStep={nextStep} onDisqualify={() => setDisqualified('age')} />;
       case 1:
-        return <StepFour formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
+        return <StepFour formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} onDisqualify={() => setDisqualified('tobacco')} />;
       case 2:
         return <StepThree formData={formData} updateFormData={updateFormData} nextStep={nextStep} prevStep={prevStep} />;
       case 3:
@@ -180,7 +180,7 @@ const QuizFunnel = () => {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {disqualified ? <StepDisqualified /> : renderStep()}
+            {disqualified ? <StepDisqualified reason={disqualified} /> : renderStep()}
           </motion.div>
         </AnimatePresence>
 

@@ -9,7 +9,8 @@ const StepFour = ({
   formData,
   updateFormData,
   nextStep,
-  prevStep
+  prevStep,
+  onDisqualify
 }) => {
   const options = [{
     value: 'no',
@@ -24,7 +25,11 @@ const StepFour = ({
   }];
   const handleSelect = value => {
     updateFormData('smoker', value);
-    setTimeout(() => nextStep(), 400);
+    if (value === 'yes') {
+      setTimeout(() => onDisqualify(), 400);
+    } else {
+      setTimeout(() => nextStep(), 400);
+    }
   };
   return <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
       <Button variant="ghost" onClick={prevStep} className="mb-4 -ml-2 text-gray-600 hover:text-gray-900">
