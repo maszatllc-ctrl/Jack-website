@@ -146,10 +146,10 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
         throw new Error(data.error || 'Failed to send OTP.');
       }
 
+      await saveUnverifiedLead();
       setCurrentView('otp');
       setResendCount(c => c + 1);
       startCooldown();
-      await saveUnverifiedLead();
     } catch (error) {
       console.error('Send OTP error:', error);
       toast({
@@ -203,23 +203,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
       const finalLeadData = getLeadData(true);
       const eventId = crypto.randomUUID();
-
-      // Update existing lead record from unverified to verified
-      if (leadRecordId.current) {
-        const { error: dbError } = await supabase
-          .from('term_leads')
-          .update({ verified: true })
-          .eq('id', leadRecordId.current);
-        if (dbError) {
-          console.error('Error updating lead verification in DB:', dbError);
-        }
-      } else {
-        // Fallback: insert if no existing record
-        const { error: dbError } = await supabase.from('term_leads').insert([finalLeadData]);
-        if (dbError) {
-          console.error('Error saving lead to DB:', dbError);
-        }
-      }
 
       // Send to webhook & CAPI
       await sendLeadWebhook(finalLeadData, eventId);
