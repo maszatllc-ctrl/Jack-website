@@ -1,27 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star } from 'lucide-react';
+import STATE_NAMES from '@/lib/stateNames';
 
-const getDynamicTestimonial = (zipCode, state) => {
-  // Always use "Caleb H." for the name
+const getDynamicTestimonial = (state) => {
   const name = 'Caleb H.';
-
-  // Keep the state dynamic based on zip code or fallback to provided state
-  const zipNum = parseInt(zipCode, 10);
-  let dynamicState = state; // Default to the provided state
-
-  if (zipNum >= 10001 && zipNum <= 14975) dynamicState = 'New York';
-  else if (zipNum >= 30001 && zipNum <= 34997) dynamicState = 'Florida';
-  else if (zipNum >= 60001 && zipNum <= 62999) dynamicState = 'Illinois';
-  else if (zipNum >= 75001 && zipNum <= 79999) dynamicState = 'Texas';
-  else if (zipNum >= 90001 && zipNum <= 96162) dynamicState = 'California';
-  else dynamicState = dynamicState || 'USA'; // If state is not determined by zip, use the provided state or 'USA'
-
+  const dynamicState = STATE_NAMES[state] || state || 'USA';
   return { name, state: dynamicState };
 };
 
-const FinalReview = ({ zipCode, state }) => {
-  const testimonial = getDynamicTestimonial(zipCode, state);
+const FinalReview = ({ state }) => {
+  const testimonial = getDynamicTestimonial(state);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
