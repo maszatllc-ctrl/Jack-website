@@ -64,7 +64,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
   const [resendCooldown, setResendCooldown] = useState(0);
   const [resendCount, setResendCount] = useState(0);
   const timerRef = useRef(null);
-  const unverifiedLeadTimer = useRef(null);
+  const leadRecordId = useRef(null);
 
   const startCooldown = () => {
     setResendCooldown(RESEND_COOLDOWN_SECONDS);
@@ -82,7 +82,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
   useEffect(() => {
     return () => {
       clearInterval(timerRef.current);
-      clearTimeout(unverifiedLeadTimer.current);
     }
   }, []);
 
@@ -106,18 +105,30 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
     };
   };
 
-  const scheduleUnverifiedLeadSubmission = () => {
-    clearTimeout(unverifiedLeadTimer.current);
-    unverifiedLeadTimer.current = setTimeout(async () => {
-      const unverifiedLeadData = getLeadData(false);
+  const saveUnverifiedLead = async () => {
+    const unverifiedLeadData = getLeadData(false);
 
-      const { error: dbError } = await supabase.from('term_leads').insert([unverifiedLeadData]);
+    if (leadRecordId.current) {
+      // Update existing record if user went back and resubmitted
+      const { error: dbError } = await supabase
+        .from('term_leads')
+        .update(unverifiedLeadData)
+        .eq('id', leadRecordId.current);
+      if (dbError) {
+        console.error('Error updating unverified lead in DB:', dbError);
+      }
+    } else {
+      // Insert new unverified record
+      const { data, error: dbError } = await supabase
+        .from('term_leads')
+        .insert([unverifiedLeadData])
+        .select('id');
       if (dbError) {
         console.error('Error saving unverified lead to DB:', dbError);
-      } else {
-        await sendLeadWebhook(unverifiedLeadData);
+      } else if (data && data.length > 0) {
+        leadRecordId.current = data[0].id;
       }
-    }, 300000);
+    }
   };
 
   const sendOtp = useCallback(async () => {
@@ -138,7 +149,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
       setCurrentView('otp');
       setResendCount(c => c + 1);
       startCooldown();
-      scheduleUnverifiedLeadSubmission();
+      await saveUnverifiedLead();
     } catch (error) {
       console.error('Send OTP error:', error);
       toast({
@@ -167,7 +178,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
   const handleOtpSubmit = async (submittedOtp) => {
     setIsLoading(true);
-    clearTimeout(unverifiedLeadTimer.current);
 
     const numericPhone = `+1${phone.replace(/\D/g, '')}`;
 
@@ -194,10 +204,21 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
       const finalLeadData = getLeadData(true);
       const eventId = crypto.randomUUID();
 
-      // Save to Supabase DB
-      const { error: dbError } = await supabase.from('term_leads').insert([finalLeadData]);
-      if (dbError) {
-        console.error('Error saving lead to DB:', dbError);
+      // Update existing lead record from unverified to verified
+      if (leadRecordId.current) {
+        const { error: dbError } = await supabase
+          .from('term_leads')
+          .update({ verified: true })
+          .eq('id', leadRecordId.current);
+        if (dbError) {
+          console.error('Error updating lead verification in DB:', dbError);
+        }
+      } else {
+        // Fallback: insert if no existing record
+        const { error: dbError } = await supabase.from('term_leads').insert([finalLeadData]);
+        if (dbError) {
+          console.error('Error saving lead to DB:', dbError);
+        }
       }
 
       // Send to webhook & CAPI
@@ -218,7 +239,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
         variant: 'destructive',
       });
       setOtp(['', '', '', '']);
-      scheduleUnverifiedLeadSubmission();
     } finally {
       setIsLoading(false);
     }
@@ -227,7 +247,6 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
 
   const goBack = () => {
     if (currentView === 'otp') {
-      clearTimeout(unverifiedLeadTimer.current);
       setCurrentView('details');
     } else {
       prevStep();
@@ -273,10 +292,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
                 resendCount={resendCount}
                 maxResends={MAX_RESENDS}
                 onResend={handleOtpResend}
-                onBack={() => {
-                  clearTimeout(unverifiedLeadTimer.current);
-                  setCurrentView('details');
-                }}
+                onBack={() => setCurrentView('details')}
                 maskedPhone={phone ? `(***) ***-${phone.replace(/\D/g, '').slice(-4)}` : ''}
               />
             )}
