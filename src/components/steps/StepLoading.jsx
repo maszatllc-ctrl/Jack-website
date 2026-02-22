@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { estimateRate } from '@/lib/rateEstimator';
+import STATE_NAMES from '@/lib/stateNames';
 
 const carrierLogos = [
   { alt: 'Aflac Logo', src: '/images/carriers/aflac.jpg' },
@@ -15,7 +16,7 @@ const StepLoading = ({ formData, updateFormData, nextStep, geoState }) => {
   const [progress, setProgress] = useState(0);
   const rateStored = useRef(false);
 
-  const stateName = formData.state || geoState || 'your area';
+  const stateName = STATE_NAMES[formData.state] || formData.state || geoState || 'your area';
   const rate = estimateRate(formData);
 
   useEffect(() => {

@@ -250,7 +250,7 @@ const PhoneVerification = ({ formData, updateFormData, nextStep, prevStep }) => 
           >
             {currentView === 'details' && (
               <>
-                <FinalReview zipCode={formData.zipCode} state={formData.state} />
+                <FinalReview state={formData.state} />
                 <DetailsForm
                   name={name}
                   setName={setName}

@@ -12,25 +12,11 @@ import ThankYou from '@/components/steps/ThankYou';
 import StepDisqualified from '@/components/steps/StepDisqualified';
 import SocialProof from '@/components/SocialProof';
 
-const STATE_NAMES = {
-  AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
-  CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia',
-  HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa',
-  KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland',
-  MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri',
-  MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey',
-  NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio',
-  OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island', SC: 'South Carolina',
-  SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah', VT: 'Vermont',
-  VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming',
-  DC: 'District of Columbia',
-};
-
 const QuizFunnel = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [disqualified, setDisqualified] = useState('');
-  const [geoState, setGeoState] = useState('');
-  const [geoStateAbbr, setGeoStateAbbr] = useState('');
+  const [geoState] = useState('New Jersey');
+  const [geoStateAbbr] = useState('NJ');
   const [formData, setFormData] = useState({
     age_range: '',
     smoker: '',
@@ -46,16 +32,6 @@ const QuizFunnel = () => {
 
   useEffect(() => {
     sessionStorage.removeItem('webhookSent');
-
-    fetch('/api/geo')
-      .then(res => res.json())
-      .then(data => {
-        if (data.state) {
-          setGeoState(STATE_NAMES[data.state] || data.state);
-          setGeoStateAbbr(data.state);
-        }
-      })
-      .catch(() => {});
   }, []);
 
   const totalSteps = 6;
@@ -120,21 +96,19 @@ const QuizFunnel = () => {
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
                 {/* State indicator pill */}
-                {geoState && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="flex items-center justify-center mb-4"
-                  >
-                    <span className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-1.5 rounded-full text-sm font-semibold shadow-sm">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                      </span>
-                      {geoState} Residents
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center justify-center mb-4"
+                >
+                  <span className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-1.5 rounded-full text-sm font-semibold shadow-sm">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
                     </span>
-                  </motion.div>
-                )}
+                    New Jersey Residents
+                  </span>
+                </motion.div>
 
                 {/* Two-color headline */}
                 <h1 className="text-2xl md:text-3xl font-extrabold text-center mb-2">
