@@ -33,23 +33,28 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, error: 'Invalid verification code' });
     }
 
-    // Update the lead's verified status server-side using the service role key
-    // This bypasses RLS, which is why the client-side update was silently failing
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // OTP is verified — update the lead's verified status in Supabase.
+    // Wrapped in its own try/catch so a Supabase failure never causes the
+    // user to see "invalid code" after their OTP was already approved.
+    try {
+      const supabaseUrl = process.env.SUPABASE_URL;
+      const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (supabaseUrl && supabaseServiceKey) {
-      const supabase = createClient(supabaseUrl, supabaseServiceKey);
-      const { error: dbError } = await supabase
-        .from('term_leads')
-        .update({ verified: true })
-        .eq('phone', phone);
+      if (!supabaseUrl || !supabaseServiceKey) {
+        console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env vars — skipping DB update');
+      } else {
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
+        const { error: dbError } = await supabase
+          .from('term_leads')
+          .update({ verified: true })
+          .eq('phone', phone);
 
-      if (dbError) {
-        console.error('Error updating lead verification in DB:', dbError);
+        if (dbError) {
+          console.error('Error updating lead verification in DB:', dbError);
+        }
       }
-    } else {
-      console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env vars');
+    } catch (dbErr) {
+      console.error('Supabase update failed (OTP was still verified):', dbErr);
     }
 
     return res.status(200).json({ success: true, status: data.status });
